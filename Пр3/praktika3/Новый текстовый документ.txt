@@ -1,0 +1,67 @@
+#include <8051.h>
+
+void runningString(short*str,short strLen,short position, short maxPosition)
+{
+	unsigned short i;
+	unsigned current = 0;
+	P0 = 0x80;  
+	P2 = 0x1;  
+	P2 = 0x0;
+for(i=0;i<strLen;i++) 
+	{  
+		if(current >= maxPosition) break;
+        if(position+i > maxPosition) {
+		P0 = str[i]; 
+		P2 = 0x3; 
+		P2 = 0x2;
+		current ++;}
+	}
+	for(i=0;i<position;i++)
+	{
+		P0 = 0x4;
+		P2 = 0x3;
+		P2 = 0x2;
+		current++;
+	}
+	
+for(i=0;i<strLen;i++) 
+	{  
+		if(current >= maxPosition) break;
+		P0 = str[i]; 
+		P2 = 0x3; 
+		P2 = 0x2;
+		current ++;
+	}
+}
+
+
+void main()
+{
+	unsigned int i;  
+	unsigned char *str="Ivan!";  
+	unsigned char *str2="    Yashenin";
+	unsigned short currentPosition = 0;
+	unsigned short maxPosition = 16;
+    short strl[4]= {169,162,160,174};
+    short strl2[11]={200,200,200,200,200,192,185,165,174,169,174};
+	P0 = 0x38;  
+	P2 = 0x1;  
+	P2 = 0x0;  
+	//runningString(str,6,1);
+P0 = 0xC0;
+P2 = 0x1;
+P2 = 0x0;	
+	for(i=0;i<11;i++) //????? ?? LCD ?????? ??????
+{
+P0= strl2[i];
+P2 = 0x3;
+P2 = 0x2;
+
+	}
+	while(1)
+	{
+		runningString(strl,4,currentPosition,maxPosition);
+		if(currentPosition < 16) currentPosition++; 
+		else currentPosition = 0;
+	}
+}
